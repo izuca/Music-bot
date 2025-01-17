@@ -3,14 +3,14 @@ const { useQueue } = require('discord-player');
 const { Translate } = require('../../process_tools');
 
 module.exports = {
-    name: 'history',
-    description:('See the history of the queue'),
+    name: 'historico',
+    description:('Veja o histórico da fila'),
     voiceChannel: false,
 
     async execute({ inter }) {
         const queue = useQueue(inter.guild);
 
-        if (!queue || queue.history.tracks.toArray().length == 0) return inter.editReply({ content: await Translate(`No music has been played yet`) });
+        if (!queue || queue.history.tracks.toArray().length == 0) return inter.editReply({ content: await Translate(`Tá limpin, zero música`) });
 
         const tracks = queue.history.tracks.toArray();
 
@@ -20,11 +20,11 @@ module.exports = {
             .join('\r\n\r\n');
 
         let historyEmbed = new EmbedBuilder()
-            .setTitle(`History`)
+            .setTitle(`Histórico`)
             .setDescription(description)
             .setColor('#2f3136')
             .setTimestamp()
-            .setFooter({ text: await Translate('Music comes first - Made with heart by the Community <❤️>'), iconURL: inter.member.avatarURL({ dynamic: true }) });
+            .setFooter({ text: await Translate('Não irrite o adm.'), iconURL: inter.member.avatarURL({ dynamic: true }) });
 
         inter.editReply({ embeds: [historyEmbed] });
     }

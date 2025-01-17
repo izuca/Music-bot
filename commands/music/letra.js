@@ -3,14 +3,14 @@ const { useMainPlayer, useQueue } = require('discord-player');
 const { Translate } = require('../../process_tools');
 
 module.exports = {
-    name: 'lyrics',
-    description:('Get the lyrics for the current track'),
+    name: 'letra',
+    description:('Pegue a letra da música atual'),
     voiceChannel: true,
 
     async execute({ inter }) {
         const player = useMainPlayer();
         const queue = useQueue(inter.guild);
-        if (!queue?.isPlaying()) return inter.editReply({ content: await Translate(`No music currently playing <${inter.member}>... try again ? <❌>`) });
+        if (!queue?.isPlaying()) return inter.editReply({ content: await Translate(`Não tem música tocando, <${inter.member}>... <❌>`) });
 
         const results = await player.lyrics
             .search({
@@ -18,11 +18,11 @@ module.exports = {
             })
             .catch(async (e) => {
                 console.log(e);
-                return inter.editReply({ content: await Translate(`Error! Please contact Developers! | <❌>`) });
+                return inter.editReply({ content: await Translate(`Ih deu merda! Chame o ADM... <❌>`) });
             });
 
         const lyrics = results?.[0];
-        if (!lyrics?.plainLyrics) return inter.editReply({ content: await Translate(`No lyrics found for <${queue.currentTrack.title}>... try again ? <❌>`) });
+        if (!lyrics?.plainLyrics) return inter.editReply({ content: await Translate(`Não achei legenda pra <${queue.currentTrack.title}>... <❌>`) });
 
         const trimmedLyrics = lyrics.plainLyrics.substring(0, 1997);
 
@@ -32,7 +32,7 @@ module.exports = {
                 name: lyrics.artistName
             })
             .setDescription(trimmedLyrics.length === 1997 ? `${trimmedLyrics}...` : trimmedLyrics)
-            .setFooter({ text: await Translate('Music comes first - Made with heart by the Community <❤️>'), iconURL: inter.member.avatarURL({ dynamic: true }) })
+            .setFooter({ text: await Translate('Dica: Não irrite o ADM <🦧>'), iconURL: inter.member.avatarURL({ dynamic: true }) })
             .setTimestamp()
             .setColor('#2f3136');
 

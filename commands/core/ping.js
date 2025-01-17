@@ -3,7 +3,7 @@ const { Translate } = require('../../process_tools');
 
 module.exports = {
     name: 'ping',
-    description:("Get the ping of the bot!"),
+    description:("Testa a Latência do Segurança"),
 
     async execute({ client, inter }) {
         await inter.editReply("Ping?");

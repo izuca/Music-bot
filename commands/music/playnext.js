@@ -4,12 +4,12 @@ const { Translate } = require('../../process_tools');
 
 module.exports = {
     name: 'playnext',
-    description:("Play a song right after this one"),
+    description:("Toca uma música logo após a atual"),
     voiceChannel: true,
     options: [
         {
             name: 'song',
-            description:('The song you want to play next'),
+            description:('Qual o próximo som?'),
             type: ApplicationCommandOptionType.String,
             required: true,
         }
@@ -19,7 +19,7 @@ module.exports = {
         const player = useMainPlayer();
         const queue = useQueue(inter.guild);
 
-        if (!queue?.isPlaying()) return inter.editReply({ content: await Translate(`No music currently playing <${inter.member}>... try again ? <❌>`) });
+        if (!queue?.isPlaying()) return inter.editReply({ content: await Translate(`Não tem música tocando, <${inter.member}>... <❌>`) });
 
         const song = inter.options.getString('song');
         const res = await player.search(song, {
@@ -27,9 +27,9 @@ module.exports = {
             searchEngine: QueryType.AUTO
         });
 
-        if (!res?.tracks.length) return inter.editReply({ content: await Translate(`No results found <${inter.member}>... try again ? <❌>`) });
+        if (!res?.tracks.length) return inter.editReply({ content: await Translate(`Essa música non ecsiste! <❌>`) });
 
-        if (res.playlist) return inter.editReply({ content: await Translate(`This command dose not support playlist's <${inter.member}>... try again ? <❌>`) });
+        if (res.playlist) return inter.editReply({ content: await Translate(`?`) });
 
         queue.insertTrack(res.tracks[0], 0);
 

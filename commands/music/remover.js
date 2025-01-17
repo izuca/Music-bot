@@ -1,15 +1,15 @@
 const { ApplicationCommandOptionType, EmbedBuilder } = require('discord.js');
-const { useQueue } = require('discord-player');
+const { useMainPlayer, useQueue } = require('discord-player');
 const { Translate } = require('../../process_tools');
 
 module.exports = {
-    name: 'jump',
-    description:("Pula pra uma música específica da fila"),
+    name: 'remover',
+    description: "Remove a música da fila",
     voiceChannel: true,
     options: [
         {
             name: 'música',
-            description:('Nome ou URL da música a ser pulada'),
+            description:('Nome ou URL da música a ser removida'),
             type: ApplicationCommandOptionType.String,
             required: false,
         },
@@ -25,30 +25,31 @@ module.exports = {
         const queue = useQueue(inter.guild);
         if (!queue?.isPlaying()) return inter.editReply({ content: await Translate(`Não tem música tocando, <${inter.member}>... <❌>`) });
 
-        const track = inter.options.getString('música');
         const number = inter.options.getNumber('número');
+        const track = inter.options.getString('música');
         if (!track && !number) inter.editReply({ content: await Translate(`Tem que usar uma das opções pra pular a música, burrão! <❌>`) });
 
         let trackName;
-        if (track) {
-            const toJump = queue.tracks.toArray().find((t) => t.title.toLowerCase() === track.toLowerCase() || t.url === track);
-            if (!toJump) return inter.editReply({ content: await Translate(`Não achei <${track}>, <${inter.member}>... que tal usar todos os seus neurônios ? <❌>`) });
 
-            queue.node.jump(toJump);
-            trackName = toJump.title;
+        if (track) {
+            const toRemove = queue.tracks.toArray().find((t) => t.title === track || t.url === track);
+            if (!toRemove) return inter.editReply({ content: await Translate(`Não achei <${track}>, <${inter.member}>... que tal usar todos os seus neurônios? <❌>`) });
+
+            queue.removeTrack(toRemove);
         } else if (number) {
             const index = number - 1;
             const name = queue.tracks.toArray()[index].title;
-            if (!name) return inter.editReply({ content: await Translate(`Essa música non ecsiste, <${inter.member}>... <❌>`) });
+            if (!name) return inter.editReply({ content: await Translate(`Esta música non ecsiste! <❌>`) });
 
-            queue.node.jump(index);
+            queue.removeTrack(index);
+
             trackName = name;
         }
+        
+        const embed = new EmbedBuilder()
+            .setColor('#2f3136')
+            .setAuthor({ name: await Translate(`Tirei <${trackName}> da fila <✅>`) });
 
-        const jumpEmbed = new EmbedBuilder()
-            .setAuthor({ name: await Translate(`Pulei pra <${trackName}> <✅>`) })
-            .setColor('#2f3136');
-
-        inter.editReply({ embeds: [jumpEmbed] });
+        return inter.editReply({ embeds: [embed] });
     }
 }

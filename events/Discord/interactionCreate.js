@@ -11,29 +11,29 @@ module.exports = async (client, inter) => {
         const errorEmbed = new EmbedBuilder().setColor('#ff0000');
 
         if (!command) {
-            errorEmbed.setDescription(await Translate('<❌> | Error! Please contact Developers!'));
+            errorEmbed.setDescription(await Translate('<❌> | Chame o ADM!'));
             inter.editReply({ embeds: [errorEmbed], ephemeral: true });
             return client.slash.delete(inter.commandName);
         }
 
         if (command.permissions && !inter.member.permissions.has(command.permissions)) {
-            errorEmbed.setDescription(await Translate(`<❌> | You need do not have the proper permissions to exacute this command`));
+            errorEmbed.setDescription(await Translate(`<❌> | Tu não tem moral pra isso!`));
             return inter.editReply({ embeds: [errorEmbed], ephemeral: true });
         }
 
         if (DJ.enabled && DJ.commands.includes(command) && !inter.member._roles.includes(inter.guild.roles.cache.find(x => x.name === DJ.roleName).id)) {
-            errorEmbed.setDescription(await Translate(`<❌> | This command is reserved For members with <\`${DJ.roleName}\`> `));
+            errorEmbed.setDescription(await Translate(`<❌> | Só a elite do <\`${DJ.roleName}\`> pode usar isso `));
             return inter.editReply({ embeds: [errorEmbed], ephemeral: true });
         }
 
         if (command.voiceChannel) {
             if (!inter.member.voice.channel) {
-                errorEmbed.setDescription(await Translate(`<❌> | You are not in a Voice Channel`));
+                errorEmbed.setDescription(await Translate(`<❌> | Entre num canal primeiro...`));
                 return inter.editReply({ embeds: [errorEmbed], ephemeral: true });
             }
 
             if (inter.guild.members.me.voice.channel && inter.member.voice.channel.id !== inter.guild.members.me.voice.channel.id) {
-                errorEmbed.setDescription(await Translate(`<❌> | You are not in the same Voice Channel`));
+                errorEmbed.setDescription(await Translate(`<❌> | Entre no mesmo canal do bot...`));
                 return inter.editReply({ embeds: [errorEmbed], ephemeral: true });
             }
         }

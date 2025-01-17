@@ -4,12 +4,12 @@ const { Translate } = require('../../process_tools');
 
 module.exports = {
     name: 'play',
-    description:("Play a song!"),
+    description:("Toque uma música"),
     voiceChannel: true,
     options: [
         {
             name: 'song',
-            description:('The song you want to play'),
+            description:('O lixo de música que você quer ouvir'),
             type: ApplicationCommandOptionType.String,
             required: true,
         }
@@ -27,7 +27,7 @@ module.exports = {
         let defaultEmbed = new EmbedBuilder().setColor('#2f3136');
 
         if (!res?.tracks.length) {
-            defaultEmbed.setAuthor({ name: await Translate(`No results found... try again ? <❌>`) });
+            defaultEmbed.setAuthor({ name: await Translate(`Essa música non ecsiste! <❌>`) });
             return inter.editReply({ embeds: [defaultEmbed] });
         }
 
@@ -49,7 +49,7 @@ module.exports = {
             await inter.editReply({ embeds: [defaultEmbed] });
         } catch (error) {
             console.log(`Play error: ${error}`);
-            defaultEmbed.setAuthor({ name: await Translate(`I can't join the voice channel... try again ? <❌>`) });
+            defaultEmbed.setAuthor({ name: await Translate(`Me censuraram! <❌>`) });
             return inter.editReply({ embeds: [defaultEmbed] });
         }
     }

@@ -2,30 +2,30 @@ const { ApplicationCommandOptionType, ActionRowBuilder, ButtonBuilder, ChannelTy
 const { Translate } = require('../../process_tools');
 
 module.exports = {
-    name: 'controller',
-    description:("Send music controller to a channel"),
+    name: 'controle',
+    description:("Disponibiliza o controle de música"),
     voiceChannel: false,
     permissions: PermissionsBitField.Flags.ManageMessages,
     options: [
         {
-            name: 'channel',
-            description:('The text channel you want to send it to'),
+            name: 'canal',
+            description:('O canal pra mandar o controle'),
             type: ApplicationCommandOptionType.Channel,
             required: true,
         }
     ],
 
     async execute({ inter }) {
-        const channel = inter.options.getChannel('channel');
-        if (channel.type !== ChannelType.GuildText) return inter.editReply({ content: await Translate(`You need to send it to a text channel.. <❌>`) });
+        const channel = inter.options.getChannel('canal');
+        if (channel.type !== ChannelType.GuildText) return inter.editReply({ content: await Translate(`Tem que enviar pra um canal antes, burro <❌>`) });
 
         const embed = new EmbedBuilder()
-            .setTitle(await Translate('Control your music with the buttons below !'))
+            .setTitle(await Translate('CONTROLE REMOTO 3000'))
             .setImage(inter.guild.iconURL({ size: 4096, dynamic: true }))
             .setColor('#2f3136')
-            .setFooter({ text: await Translate('Music comes first - Made with heart by the Community <❤️>'), iconURL: inter.member.avatarURL({ dynamic: true }) });
+            .setFooter({ text: await Translate('Dica: Não irrite o ADM <🦧>'), iconURL: inter.member.avatarURL({ dynamic: true }) });
 
-        inter.editReply({ content: await Translate(`Sending controller to <${channel}>... <✅>`) });
+        inter.editReply({ content: await Translate(`Enviando o controle para <${channel}>... <✅>`) });
 
         let EmojiState = client.config.app.enableEmojis;
 

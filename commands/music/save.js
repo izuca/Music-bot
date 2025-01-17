@@ -4,12 +4,12 @@ const { Translate } = require('../../process_tools');
 
 module.exports = {
     name: 'save',
-    description:('Save the current track!'),
+    description:('Salva a música atual'),
     voiceChannel: true,
 
     async execute({ inter }) {
         const queue = useQueue(inter.guild);
-        if (!queue?.isPlaying()) return inter.editReply({ content: await Translate(`No music currently playing <${inter.member}>... try again ? <❌>`) });
+        if (!queue?.isPlaying()) return inter.editReply({ content: await Translate(`Não tem música tocando, <${inter.member}>... <❌>`) });
 
         const embed = new EmbedBuilder()
             .setColor('#2f3136')
@@ -26,9 +26,9 @@ module.exports = {
 
         inter.member.send({ embeds: [embed] })
         .then(async () => {
-            return inter.editReply({ content: await Translate(`I have sent you the music in private messages <✅>`) });
+            return inter.editReply({ content: await Translate(`Te mandei um segredo na DM... <✅>`) });
         }).catch(async () => {
-            return inter.editReply({ content: await Translate(`Unable to send you a private message... try again ? <❌>`) });
+            return inter.editReply({ content: await Translate(`Me censuraram! <❌>`) });
         });
     }
 }

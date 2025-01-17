@@ -3,13 +3,13 @@ const { AudioFilters, useQueue } = require('discord-player');
 const { Translate } = require('../../process_tools');
 
 module.exports = {
-    name: 'filter',
-    description:('Add a filter to your track'),
+    name: 'filtro',
+    description:('Adicione um filtro à música'),
     voiceChannel: true,
     options: [
         {
             name: 'filter',
-            description:('The filter you want to add'),
+            description:('O filtro que tu quer adicionar'),
             type: ApplicationCommandOptionType.String,
             required: true,
             choices: [...Object.keys(AudioFilters.filters).map(m => Object({ name: m, value: m })).splice(0, 25)],
@@ -18,7 +18,7 @@ module.exports = {
 
     async execute({ inter }) {
         const queue = useQueue(inter.guild);
-        if (!queue?.isPlaying()) return inter.editReply({ content: await Translate(`No music currently playing <${inter.member}>... try again ? <❌>`) });
+        if (!queue?.isPlaying()) return inter.editReply({ content: await Translate(`Não tem música tocando, <${inter.member}>... <❌>`) });
 
         const actualFilter = queue.filters.ffmpeg.getFiltersEnabled()[0];
         const selectedFilter = inter.options.getString('filter');
@@ -29,9 +29,9 @@ module.exports = {
 
         const filter = filters.find((x) => x.toLowerCase() === selectedFilter.toLowerCase().toString());
 
-        let msg = await Translate (`This filter doesn't exist <${inter.member}>... try again ? <❌ \n>`) +
-            (actualFilter ? await Translate(`Filter currently active: <**${actualFilter}**. \n>`) : "") +
-            await Translate(`List of available filters:`);
+        let msg = await Translate (`Esse filtro non ecsiste! <❌ \n>`) +
+            (actualFilter ? await Translate(`Meti um <**${actualFilter}**. \n>`) : "") +
+            await Translate(`Lista de Filtros:`);
         filters.forEach(f => msg += `- **${f}**`);
 
         if (!filter) return inter.editReply({ content: msg });
@@ -39,7 +39,7 @@ module.exports = {
         await queue.filters.ffmpeg.toggle(filter);
 
         const filterEmbed = new EmbedBuilder()
-            .setAuthor({ name: await Translate(`The filter <${filter}> is now <${queue.filters.ffmpeg.isEnabled(filter) ? 'enabled' : 'disabled'}> <✅\n> *Reminder: the longer the music is, the longer this will take.*`) })
+            .setAuthor({ name: await Translate(`O filtro <${filter}> tá <${queue.filters.ffmpeg.isEnabled(filter) ? 'on' : 'off'}> <✅\n> *Lembrete: se a música for grande, tu me quebra*`) })
             .setColor('#2f3136');
 
         return inter.editReply({ embeds: [filterEmbed] });
